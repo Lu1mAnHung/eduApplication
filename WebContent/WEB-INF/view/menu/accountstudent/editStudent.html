@@ -1,0 +1,41 @@
+<div>
+	<h1 style="text-align: center">修改学生信息</h1>
+	<form name="eidt_student" action="/menu/accountstudent/editStudent" method="post">
+		<div style="text-align: center; width: 100%">
+			<table align="center" cellpadding="5" cellspacing="0" border="0">
+			
+		    #for(studentinfo: studentList)
+		    <input type="hidden" name="id" value="#(studentinfo.id)" />
+		    <input type="hidden" name="u_no" value="#(studentinfo.u_no)" />
+		    <tr>
+			<td>所在班级: </td>
+			<td>
+			<select name ="class_fk">
+		    #for(classinfo: classList)
+		    <option value="#(classinfo.class_no)" >#(classinfo.class_name)</option>
+		    #end
+		    </select>
+		    </td>
+			</tr>
+			<tr>
+				<td align="right">姓名: </td>
+				<td><input type="text" name="u_name" value="#(studentinfo.u_name)"/></td>
+			</tr>
+			<tr>
+				<td align="right">手机: </td>
+				<td><input type="text" name="u_phone" value="#(studentinfo.u_phone)"/></td>
+			</tr>
+			<tr>
+				<td align="right">邮箱: </td>
+				<td><input type="text" name="u_email" value="#(studentinfo.u_email)"/></td>
+			</tr>
+			<tr>
+				<td align="right">出生日期: </td>
+				<td><input type="date" name="u_birthday" value="#(studentinfo.u_birthday)"/></td>
+			</tr>
+			#end
+			</table>
+			<input type="submit" value="保存" />
+		</div>
+	</form>
+</div>

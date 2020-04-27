@@ -1,0 +1,100 @@
+<div id = role_table  align="center">
+
+<table align="center" id="role_table" width="50%" cellpadding="0" cellspacing="0" border="1">
+<thead>
+<tr>
+<th>学号</th>
+<th>姓名</th>
+<th>权限</th>
+<th>状态</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+
+</table>
+</div>
+<div id="content" style="display:none"></div>
+<script>
+<script type="text/javascript" src="/static/dialog/dialog.js" ></script>
+<script type="text/javascript" src="/static/dialog/dialog-plus.js" ></script>
+<script type="text/javascript">
+function showRole(){
+	$.post("/menu/accountrole/showRole",function(roleArray){
+		$("#role_table").find("tbody").html("");
+		$.each(roleArray,function(){
+			var tr = $("<tr />");
+			var td = $("<td>"+this.u_no+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.u_name+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.role_name+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.states_name+"</td>");
+			tr.append(td);
+			//修改按钮
+			var opTd = $("<td></td>");
+			var editBtn = $("<a href='javascript://'>修改权限</a>");
+			opTd.append(editBtn);
+			tr.append(opTd);
+			var selectData = this;
+			editBtn.click(function(){
+				editRole(selectData);
+			});
+			opTd.append("&nbsp;&nbsp;");
+			//冻结按钮
+			if((this.u_states)==0){
+				var iceBtn = $("<a href='javascript://'>冻结</a>");
+			}else{
+				var iceBtn = $("<a href='javascript://'>解冻</a>");
+			}
+					
+			opTd.append(iceBtn);
+			tr.append(opTd);
+			var selectData = this;
+			iceBtn.click(function(){
+				iceStudent(selectData);
+			});
+
+				
+			$("#role_table").find("tbody").append(tr);
+		});
+	});
+}
+$(function(){
+	showRole();
+});
+
+function iceStudent(selectData){
+	var u_no = selectData.u_no;
+	var u_name=selectData.u_name;
+	var states_name=selectData.states_name;
+	var u_states = selectData.u_states;
+	$.post("/menu/accountrole/iceStudent",{u_no:u_no,u_states:u_states},function(ret){
+		if(confirm(u_name+"的当前状态为:"+states_name+"!您确认修改吗？")){
+			if("success"==ret){
+				alert("冻结状态已修改!");
+				showRole();
+			}else{
+				alert(ret);
+			}
+		}
+	});
+}
+function editRole(selectData){
+	var u_no = selectData.u_no;
+	var url = "/menu/accountrole/viewEditRole";
+	$("#content").load(url,{u_no:u_no}, function(content){
+		var d = dialog({
+			title: '修改角色权限',
+			content: content,
+			onclose: function () {
+				showRole();
+			}
+		});
+		d.showModal();
+	});
+}
+
+</script>

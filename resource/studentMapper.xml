@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.dao.StudentDao">
+	<!-- 目的：为DAO接口方法提供sql语句配置 -->
+
+	<!-- 通过学号查询学生信息 -->
+	<select id="findStudentByno" resultType="User"
+		parameterType="String">
+		select * from t_user where u_no= #{u_no}
+	</select>
+
+	<!-- 查询班级信息 -->
+	<select id="findClass" resultType="ClassInfo"
+		parameterType="String">
+		select * from t_class where 1=1
+	</select>
+	
+	<!-- 显示学生信息 -->
+	<select id="showStudent" resultType="StudentInfo"
+		parameterType="String">
+		select * from t_user left join t_class on
+		class_fk=t_class.class_no where u_role_fk=2
+	</select>
+	
+	<!-- 显示用户信息 -->
+	<select id="showUser" resultType="StudentInfo"
+		parameterType="String">
+		select * from t_user left join t_class on
+		class_fk=t_class.class_no where 1=1
+	</select>
+	
+	<!-- 删除学生信息 -->
+	<delete id="delStudent" parameterType="String">
+		DELETE from t_user where u_no= #{u_no}
+	</delete>
+	
+	<!-- 删除学生选课信息 -->
+	<delete id="delStudentClazz" parameterType="String">
+		DELETE from t_select where s_sid= #{u_no}
+	</delete>
+	
+	<!-- 修改学生信息 -->
+	<update id="updateStudent" keyProperty="id" parameterType="map">
+		update t_user set
+		(u_loginid,u_no,u_name,u_password,u_birthday,u_email,u_phone,u_states,u_role_fk,class_fk)
+		values
+		(#{u_loginid},#{u_no},#{u_name},#{u_password},#{u_birthday},#{u_email},#{u_phone},#{u_phone},#{u_states},#{u_role_fk},#{class_fk})
+	</update>
+	
+	<!-- 新增学生信息 -->
+	<insert id="addStudent" keyProperty="id" parameterType="map">
+		insert into t_user
+		(u_loginid,u_no,u_name,u_password,u_birthday,u_email,u_phone,u_states,u_role_fk,class_fk)
+		values
+		(#{u_loginid},#{u_no},#{u_name},#{u_password},#{u_birthday},#{u_email},#{u_phone},#{u_phone},#{u_states},#{u_role_fk},#{class_fk})
+	</insert>
+
+	<!-- 检查学生信息 （确保唯一）-->
+	<select id="checkStudent" resultType="Integer"
+		parameterType="String">
+		select count(*) from t_user where u_no= #{u_no}
+	</select>
+	
+	<!-- 条件查询学生信息 -->
+	<select id="queryStudent" resultType="com.edu.model.StudentInfo"
+		parameterType="map">
+		select * from t_user left join t_class on class_fk=t_class.class_no where 1=1
+		<if test="u_no != '' and u_no != null">
+            and u_no =#{u_no}
+        </if>
+        <!--如果name有值，则模糊匹配name-->
+        <if test="u_name!= '' and u_name!= null">
+            and name like '%#{u_name}%'
+        </if>
+        <if test="class_fk != '' and class_fk != null">
+            and class_fk =#{class_fk}
+        </if>
+        <if test="u_phone != '' and u_phone != null">
+            and u_phone =#{u_phone}
+        </if>
+	</select>
+</mapper>

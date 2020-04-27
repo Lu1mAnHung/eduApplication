@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.dao.CourseDao">
+	<!-- 目的：为DAO接口方法提供sql语句配置 -->
+	
+	<!-- 查询选课信息 -->
+	<select id="showCourse" resultType="String"
+		parameterType="String">
+		select * from t_course inner join t_course_type on t_course.c_type=t_course_type.type_id where 1=1
+	</select>
+	
+	<!-- 查询单条选课信息 -->
+	<select id="queryCourse" resultType="String"
+		parameterType="String">
+		select * from t_course INNER JOIN t_select on t_select.s_sid= #{sid} and t_course.c_id = t_select.s_cid
+	</select>
+	
+	<!-- 退选课程 -->
+	 <delete id="delCourse" parameterType="String">
+       DELETE from t_select where s_sid=#{ssid} and s_cid=#{scid}
+    </delete>
+    
+    <!-- 重复选课检查-->
+    <select id="checkCourse" parameterType="String"  resultType="Integer">
+       select count(*) from t_select where s_sid=#{ssid} and s_cid= #{scid}
+    </select>
+    
+    <!-- 插入选课信息-->
+    <insert id="addCourse" parameterType="String">
+        INSERT INTO t_select(s_sid,s_cid) VALUES (#{ssid},#{scid})
+    </insert>
+
+	
+</mapper>

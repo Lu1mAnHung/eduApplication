@@ -1,0 +1,14 @@
+<div>
+	<h1 style="text-align: center">修改角色权限</h1>
+	<form name="eidt_role" action="/menu/accountrole/editRole" method="post">
+		<div style="text-align: center; width: 100%">
+		   <input type="hidden" name="u_no" value="#(uno)" />
+		    <select name ="role">
+		    #for(roleinfo: roleList)
+		    <option value="#(roleinfo.id)" >#(roleinfo.role_name)</option>
+		    #end
+		    </select>
+			<input type="submit" value="保存" />
+		</div>
+	</form>
+</div>

@@ -1,0 +1,47 @@
+<div>
+	<h1 style="text-align: center">新增学生信息</h1>
+	<form name="eidt_student" action="/menu/accountstudent/addStudent" method="post">
+		<div style="text-align: center; width: 100%">
+			<table align="center" cellpadding="5" cellspacing="0" border="0">
+				<tr>
+					<td align="right">学号:</td>
+					<td><input type="text" name="u_no" /></td>
+				</tr>
+				<tr>
+					<td align="right">姓名:</td>
+					<td><input type="text" name="u_name" /></td>
+				</tr>
+					<tr>
+					<td align="right">手机:</td>
+					<td><input type="text" name="u_phone" /></td>
+				</tr>
+					<tr>
+					<td align="right">邮箱:</td>
+					<td><input type="text" name="u_email" /></td>
+				</tr>
+				<tr>
+					<td align="right">出生日期:</td>
+					<td><input type="date" name="u_birthday" id="u_birthday"/></td>
+				</tr>
+					<tr>
+					<td align="right">权限:</td>
+					<td><select name="u_role_fk">
+					#for(roleInfo : roleList)
+					<option value = "#(roleInfo.id)">#(roleInfo.role_name)</option>
+					#end					
+					</select>
+				</tr>
+				<tr>
+					<td align="right">所在班级:</td>
+					<td><select name="class_fk">
+					#for(classInfo : classList)
+					<option value = "#(classInfo.id)">#(classInfo.class_name)</option>
+					#end					
+					</select>
+					</td>
+				</tr>
+			</table>
+			<input type="submit" value="保存" />
+		</div>
+	</form>
+</div>

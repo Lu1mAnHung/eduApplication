@@ -1,0 +1,191 @@
+<div id = course_table  align="center">
+<div>
+<div>
+			课程编号: <input type="text" id="q_c_id"/>
+			课程名: <input type="text" id="q_c_name"/>
+			任课老师:<input type="text" id="q_c_teacher"/>
+			课程性质: <select id="q_c_type">
+			        <option value="0"></option>
+					<option value="1">主修</option>
+					<option value="2">辅修</option>
+				</select>
+			<button onclick="queryCourse()">查询</button>
+			</div>
+			<br/>
+		</div>
+<a href="javascript://" onclick="addCourse()">新增信息</a>
+<table align="center" id="course_table" width="50%" cellpadding="0" cellspacing="0" border="1">
+<thead>
+<tr>
+<th>课程编号</th>
+<th>课程名</th>
+<th>教材</th>
+<th>授课教师</th>
+<th>上课周时</th>
+<th>上课时间</th>
+<th>上课地点</th>
+<th>课程性质</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+
+</table>
+</div>
+<div id="content" style="display:none"></div>
+<script type="text/javascript" src="/static/dialog/dialog.js" ></script>
+<script type="text/javascript" src="/static/dialog/dialog-plus.js" ></script>
+<script type="text/javascript">
+function showCourse(){
+	$.post("/menu/addcourse/showCourse",function(courseArray){
+		$("#course_table").find("tbody").html("");
+		$.each(courseArray,function(){
+			var tr = $("<tr />");
+			var td = $("<td>"+this.c_id+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.c_name+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.c_book+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.c_teacher+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.c_time+"</td>");
+			tr.append(td);
+			if(this.c_classtime ==null)
+				this.c_classtime ="";
+			td = $("<td>"+this.c_classtime+"</td>");
+			tr.append(td);
+			if(this.c_classroom ==null)
+				this.c_classroom ="";
+			td = $("<td>" + this.c_classroom + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.type_name+ "</td>");
+			tr.append(td);
+			//修改按钮
+			var opTd = $("<td></td>");
+			var editBtn = $("<a href='javascript://'>修改</a>");
+			opTd.append(editBtn);
+			tr.append(opTd);
+			var selectData = this;
+			editBtn.click(function(){
+				editCourse(selectData);
+			});
+			opTd.append("&nbsp;&nbsp;");
+			//删除按钮
+			var delBtn = $("<a href='javascript://'>删除</a>");
+			opTd.append(delBtn);
+			tr.append(opTd);
+			var selectData = this;
+			delBtn.click(function(){
+				delCourse(selectData);
+			});
+
+				
+			$("#course_table").find("tbody").append(tr);
+		});
+	});
+}
+$(function(){
+	showCourse();
+});
+
+function editCourse(selectData){
+	var c_id = selectData.c_id;
+	var url = "/menu/addcourse/viewEditCourse";
+	$("#content").load(url,{c_id:c_id}, function(content){
+		var d = dialog({
+			title: '修改课程信息',
+			content: content,
+			onclose: function () {
+				showCourse();
+			}
+		});
+		d.showModal();
+	});
+	
+	
+}
+
+function delCourse(selectData){
+	var c_id = selectData.c_id;
+	var c_name= selectData.c_name;
+	if(confirm("确认要删除课程: "+c_id+"-"+c_name+" 吗?")){
+		$.post("/menu/addcourse/delCourse", {c_id:c_id,c_name:c_name},function(ret){
+			if("success"==ret){
+				alert("记录已删除!");
+				showCourse();
+			}else{
+				alert(ret);
+			}
+		});
+	}
+}
+function addCourse(){
+	var url = "/menu/addcourse/viewaddCourse";
+	$("#content").load(url, function(content){
+		var d = dialog({
+			title: '新增课程信息',
+			content: document.getElementById("content"),
+			onclose: function () {
+				showCourse();
+			}
+		});
+		d.showModal();
+	});
+}
+
+function queryCourse(){
+	var c_id = $("#q_c_id").val();
+	var c_name = $("#q_c_name").val();
+	var c_teacher = $("#q_c_teacher").val();
+	var c_type= $("#q_c_type").val();
+	var param={
+			c_id:c_id,
+			c_name:c_name,
+			c_teacher:c_teacher,
+			c_type: c_type	
+	};
+$.post("/menu/addcourse/queryCourse",param,function(qcourseArray){
+	$("#course_table").find("tbody").html("");
+	$.each(qcourseArray,function(){
+		var tr = $("<tr />");
+		var td = $("<td>"+this.c_id+"</td>");
+		tr.append(td);
+		td = $("<td>"+this.c_name+"</td>");
+		tr.append(td);
+		td = $("<td>"+this.c_book+"</td>");
+		tr.append(td);
+		td = $("<td>"+this.c_teacher+"</td>");
+		tr.append(td);
+		td = $("<td>"+this.c_time+"</td>");
+		tr.append(td);
+		td = $("<td>"+this.c_classtime+"</td>");
+		tr.append(td);
+		td = $("<td>" + this.c_classroom + "</td>");
+		tr.append(td);
+		td = $("<td>" + this.type_name+ "</td>");
+		tr.append(td);
+		//修改按钮
+		var opTd = $("<td></td>");
+		var editBtn = $("<a href='javascript://'>修改</a>");
+		opTd.append(editBtn);
+		tr.append(opTd);
+		var selectData = this;
+		editBtn.click(function(){
+			editCourse(selectData);
+		});
+		opTd.append("&nbsp;&nbsp;");
+		//删除按钮
+		var delBtn = $("<a href='javascript://'>删除</a>");
+		opTd.append(delBtn);
+		tr.append(opTd);
+		var selectData = this;
+		delBtn.click(function(){
+			delCourse(selectData);
+		});
+		$("#course_table").find("tbody").append(tr);
+	});
+});
+}
+</script>

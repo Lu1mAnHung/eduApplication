@@ -1,0 +1,38 @@
+<div>	
+<p>登录名:<span>#(currentUser.u_loginid) </span>
+</p>
+<p>姓名<input type="text" id="u_name" value=#(currentUser.u_name)></p>
+<p>邮箱<input type="text" id="u_email" value=#(currentUser.u_email)></p>
+<p>电话号码<input type="text" id="u_phone" value=#(currentUser.u_phone)></p>
+<p>出生日期<input type="date" id="u_birthday" value=#(currentUser.u_birthday)></p>
+<p><button type="button" class="btn btn-success" onclick="save()">
+<i class="fa fa-save"></i> 
+确认修改</button></p>
+</div>
+
+<script>
+function save(){
+	var u_name = $("#u_name").val();
+	var u_email = $("#u_email").val();
+	var u_phone = $("#u_phone").val();
+	var u_birthday = $("#u_birthday").val();
+	var param ={
+			u_name : u_name,
+	        u_email: u_email,
+	        u_phone: u_phone,
+	        u_birthday :u_birthday
+	};
+	$.post("/menu/personalinfo/saveNewinfo",param,function(ret){
+		if ("success" == ret) {
+			alert("修改成功!");
+		} else {
+			alert("错误: " + ret);
+		}
+	});
+}
+
+laydate.render({
+	elem : '#u_birthday' ,//指定元素
+	type :'date'
+});
+</script>

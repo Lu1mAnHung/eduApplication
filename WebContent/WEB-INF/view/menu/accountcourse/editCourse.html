@@ -1,0 +1,52 @@
+<div>
+	<h1 style="text-align: center">修改学生信息</h1>
+	<form name="eidt_course" action="/menu/addcourse/editCourse" method="post">
+		<div style="text-align: center; width: 100%">
+			<table align="center" cellpadding="5" cellspacing="0" border="0">
+			
+		    #for(courseinfo: courseList)
+		    <input type="hidden" name="id" value="#(courseinfo.id)" />
+			<tr>
+				<td align="right">课程编号: </td>
+				<td><input type="text" name="c_id" value="#(courseinfo.c_id)"/></td>
+			</tr>
+			<tr>
+				<td align="right">课程名: </td>
+				<td><input type="text" name="c_name" value="#(courseinfo.c_name)"/></td>
+			</tr>
+			<tr>
+				<td align="right">授课教师: </td>
+				<td><input type="text" name="c_teacher" value="#(courseinfo.c_teacher)"/></td>
+			</tr>
+			<tr>
+				<td align="right">教材: </td>
+				<td><input type="text" name="c_book" value="#(courseinfo.c_book)"/></td>
+			</tr>
+			<tr>
+				<td align="right">上课时间: </td>
+				<td><input type="text" name="c_classtime" value="#(courseinfo.c_classtime)"/></td>
+			</tr>
+			<tr>
+				<td align="right">上课地点: </td>
+				<td><input type="text" name="c_classroom" value="#(courseinfo.c_classroom)"/></td>
+			</tr>
+			<tr>
+				<td align="right">周时: </td>
+				<td><input type="text" name="c_time" value="#(courseinfo.c_time)"/></td>
+			</tr>
+			<tr>
+			<td>课程性质: </td>
+			<td>
+			<select name ="c_type">
+		    #for(typeinfo: typeList)
+		    <option value="#(typeinfo.type_id)" >#(typeinfo.type_name)</option>
+		    #end
+		    </select>
+		    </td>
+			</tr>
+			#end
+			</table>
+			<input type="submit" value="保存" />
+		</div>
+	</form>
+</div>

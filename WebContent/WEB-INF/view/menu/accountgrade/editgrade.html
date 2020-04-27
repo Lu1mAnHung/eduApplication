@@ -1,0 +1,14 @@
+<div>
+	<h1 style="text-align: center">修改学生成绩</h1>
+	<form name="eidt_role" action="/menu/accountgrade/editgrade" method="post">
+		<div style="text-align: center; width: 100%">
+		<p>学号:</p>
+		   <input type="text" name="u_no"  readonly unselectable="on" value="#(gradeinfo.u_no)" />
+		<p>课程号:</p>
+		     <input type="text" name="s_cid"  readonly unselectable="on"  value="#(gradeinfo.s_cid)" />
+		 <p>成绩:</p> 
+            <input type="text" name="g_grade" value="#(gradeinfo.g_grade)"/>
+			<input type="submit" value="保存" />
+		</div>
+	</form>
+</div>

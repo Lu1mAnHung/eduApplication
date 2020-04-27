@@ -1,0 +1,30 @@
+<div>
+<p>请输入新密码: <input type="password" id="new_pass" /></p>
+<p>再次输入密码: <input type="password" id="new_pass2" /></p>
+<p><button type="button" class="btn btn-success" onclick="changepass()">
+<i class="fa fa-save"></i> 
+保存</button></p>
+</div>
+<script>
+function changepass(){
+	var newPass = $("#new_pass").val();
+	var newPass2 = $("#new_pass2").val();
+	if(newPass=="" || newPass2==""){
+		alert("密码不能为空");
+		return false;
+	}
+	if(newPass != newPass2){
+		alert("两次输入的密码不一致!");
+		return false;
+	}
+	$.post("/menu/changepass/saveNewPass", {
+		newPass : newPass
+	}, function(ret){
+		if("success"==ret){
+			alert("密码保存成功, 重新登录生效");
+		}else{
+			alert("错误: "+ret);
+		}
+	});
+}
+</script>

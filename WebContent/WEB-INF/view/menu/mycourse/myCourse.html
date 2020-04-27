@@ -1,0 +1,43 @@
+<div id="mycourseinfo">
+<div align="center">
+<p><span>我的课程表</span></p></div>
+	<table align="center" id="course_table" width="50%" cellpadding="0" cellspacing="0" border="1">
+			<thead>
+				<tr>
+				<th>课程名字</th>
+				<th>使用书籍 </th>
+				<th>授课老师</th>
+				<th>上课时间</th>
+				<th>上课地点</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+			</table>
+</div>
+<script>
+function showCourse(){
+	$.post("/menu/mycourse/showCourse",function(courseArray){
+		$("#mycourseinfo").find("tbody").html("");
+		$.each(courseArray, function() {
+			var tr = $("<tr />");
+			td = $("<td>" + this.c_name + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_book + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_teacher + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_classtime + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_classroom+ "</td>");
+			tr.append(td);
+			$("#mycourseinfo").find("tbody").append(tr);
+		});
+	});	
+}
+$(function() {
+	showCourse();
+});
+
+</script>

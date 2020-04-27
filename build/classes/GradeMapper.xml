@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.dao.GradeDao">
+	<!-- 目的：为DAO接口方法提供sql语句配置 -->
+
+	<select id="showGrade" resultType="String"
+		parameterType="String">
+		select * from (t_select inner join t_course on
+		t_select.s_cid=t_course.c_id)left join t_user on t_select.s_sid=
+		t_user.u_no where 1=1
+	</select>
+
+	<select id="querygrade" resultType="String"
+		parameterType="map">
+		select * from (t_select inner join t_course on
+		t_select.s_cid=t_course.c_id)left join t_user on t_select.s_sid=
+		t_user.u_no where 1=1
+		<if test="u_no != '' and u_no != null">
+			and u_no =#{u_no}
+		</if>
+		<!--如果name有值，则模糊匹配name -->
+		<if test="u_name!= '' and u_name!= null">
+			and u_name!= like '%#{u_name}%'
+		</if>
+		<if test="c_name != '' and c_name != null">
+			and c_name!= like '%#{c_name}%'
+		</if>
+		<if test="g_staus != '' and g_staus != null">
+			and g_staus =#{g_staus}
+		</if>
+	</select>
+
+	<update id="updateStudent" keyProperty="id">
+		update t_select set
+		g_grade=#{g_grade} ,g_staus=#{g_staus} where
+		s_sid=#{s_sid} and
+		s_cid=#{s_cid}
+	</update>
+
+	<select id="showStudentGrade"
+		resultType="StudentGradeInfo" parameterType="String">
+		select *from
+		(t_select INNER JOIN t_course on t_select.s_sid=#{s_sid} and
+		t_select.s_cid=t_course.c_id)left join t_grade_states on
+		t_select.g_staus=t_grade_states.states_id
+	</select>
+
+	<select id="queryStudentGrade"
+		resultType="StudentGradeInfo" parameterType="map">
+		from (t_select left JOIN t_course on t_select.s_cid=t_course.c_id)left
+		join t_grade_states on t_select.g_staus=t_grade_states.states_id where
+		t_select.s_sid= #{s_sid}
+		<if test="c_name != '' and c_name != null">
+			and c_name!= like '%#{c_name}%'
+		</if>
+		<if test="g_staus != '3' and g_staus != null">
+			and g_staus =#{g_staus}
+		</if>
+	</select>
+</mapper>

@@ -1,0 +1,60 @@
+<div id = course_table  align="center">
+<div>
+<div>
+			课程名: <select id="c_name">
+			#for(courseinfo : courseinfolist)
+					<option value = "#(courseinfo.c_name)">#(courseinfo.c_name)</option>
+					#end					
+					</select>
+			上课时间：<select id="c_classtime_1">
+			        <option value="周一">周一</option>
+					<option value="周二">周二</option>
+					<option value="周三">周三</option>
+					<option value="周四">周四</option>
+					<option value="周五">周五</option>
+				</select>
+			    <select id="c_classtime_2">
+			        <option value="第一节">第一节</option>
+					<option value="第二节">第二节</option>
+					<option value="第三节">第三节</option>
+					<option value="第四节">第四节</option>
+					<option value="第五节">第五节</option>
+				</select>
+			上课地点:<input type="text" name="c_classroom" placeholder="例：c-301" />
+			<button onclick="saveschedule()">保存</button>
+			</div>
+			<br/>
+		</div>
+<table align="center" id="course_table" width="50%" cellpadding="0" cellspacing="0" border="1">
+<thead>
+</thead>
+<tbody>
+</tbody>
+
+</table>
+</div>
+<script type="text/javascript" src="/static/dialog/dialog.js" ></script>
+<script type="text/javascript" src="/static/dialog/dialog-plus.js" ></script>
+<script type="text/javascript">
+
+function saveschedule(){
+	var c_name = $("#c_name").val();
+	var c_classtime_1 = $("#c_classtime_1").val();
+	var c_classtime_2 = $("#c_classtime_2").val();
+	var c_classroom = $("#c_classroom").val();
+	var param ={
+			c_name : c_name,
+			c_classtime_1: c_classtime_1,
+			c_classtime_2: c_classtime_2,
+			c_classroom :c_classroom
+	};
+	$.post("/menu/schedule/saveSchedule",param,function(ret){
+		if ("success" == ret) {
+			alert("课程安排信息录入成功!");
+		} else {
+			alert("错误: " + ret);
+		}
+	});
+}
+
+</script>

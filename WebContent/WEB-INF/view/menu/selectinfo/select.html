@@ -1,0 +1,141 @@
+<div id="selectinfo">
+<div align="center">
+<p><span>课程信息表</span></p></div>
+	<table align="center" id="select_table" width="50%" cellpadding="0" cellspacing="0" border="1">
+			<thead>
+				<tr>
+				<th>课程编号</th>
+				<th>课程名字</th>
+				<th>使用书籍 </th>
+				<th>授课老师</th>
+				<th>上课时间</th>
+				<th>课程性质</th>
+				<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+			</table>
+</div>
+<div align="center">
+<p><span>已选课程</span></p>
+</div>
+<div id="courseinfo">
+	<table align="center" id="course_table" width="50%" cellpadding="0" cellspacing="0" border="1">
+			<thead>
+				<tr>
+				<th>课程编号</th>
+				<th>课程名字</th>
+				<th>使用书籍 </th>
+				<th>授课老师</th>
+				<th>上课时间</th>
+				<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+			</table>
+</div>
+<script>
+function courseinfo(){
+	$.post("/menu/selectinfo/showCourse",function(courseArray){
+		$("#selectinfo").find("tbody").html("");
+		$.each(courseArray, function() {
+			var tr = $("<tr />");
+			var td = $("<td>" + this.c_id + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_name + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_book + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_teacher + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_time + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.type_name+ "</td>");
+			tr.append(td);
+			var opTd = $("<td></td>");
+			var addBtn = $("<a href='javascript://'>选择</a>");
+			opTd.append(addBtn);
+			tr.append(opTd);
+			var selectData = this;
+			addBtn.click(function(){
+				addCourse(selectData);
+			});
+			$("#selectinfo").find("tbody").append(tr);
+		});
+	});	
+}
+$(function() {
+	courseinfo();
+});
+function queryCourse(){
+	$.post("/menu/selectinfo/queryCourse",function(courseArray){
+		$("#courseinfo").find("tbody").html("");
+		$.each(courseArray, function() {
+			var tr = $("<tr />");
+			var td = $("<td>" + this.c_id + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_name + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_book + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_teacher + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_time+ "</td>");
+			tr.append(td);
+			var opTd = $("<td></td>");
+			var delBtn = $("<a href='javascript://'>删除</a>");
+			opTd.append(delBtn);
+			tr.append(opTd);
+			var courseData = this;
+			delBtn.click(function(){
+				delCourse(courseData);
+			});
+			$("#courseinfo").find("tbody").append(tr);
+		});
+	});	
+}
+function delCourse(CourseData){
+	var ssid = CourseData.s_sid;
+	var scid = CourseData.s_cid;
+	var Cname= CourseData.c_name;
+	var Ctype = CourseData.c_type;
+	if(confirm("确认删除课程："+Cname+"吗？")){
+		$.post("/menu/selectinfo/delCourse",{
+			ssid : ssid,
+			scid : scid,
+			ctype: Ctype
+		},function(ret){
+			if("success"==ret){
+				alert("记录已删除!");
+				queryCourse();
+			}else{
+				alert(ret);
+			}
+		});
+	}
+}
+$(function() {
+	queryCourse();
+});
+function addCourse(selectData){
+	var scid = selectData.c_id;
+	var cname= selectData.c_name;
+	if(confirm("确认选择课程:"+cname+"吗？")){
+		$.post("/menu/selectinfo/addCourse",{
+			scid:scid
+		},function(ret){
+			if("success"==ret){
+				alert("选择成功!");
+				queryCourse();
+			}else{
+				alert(ret);
+			}
+		})
+	}
+}
+
+</script>

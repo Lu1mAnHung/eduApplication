@@ -1,0 +1,16 @@
+<div>
+	<h1 style="text-align: center">添加评价</h1>
+	<form name="eidt_evaluation" action="/menu/courseeva/addevaluation" method="post">
+		<div style="text-align: center; width: 100%">
+		<p>课程编号:</p>
+		   <input type="text" name="c_id"  readonly unselectable="on" value="#(evaluationinfo.c_id)" />
+		<p>课程名:</p>
+		     <input type="text" name="c_name"  readonly unselectable="on"  value="#(evaluationinfo.c_name)" />
+		 <p>授课老师:</p> 
+            <input type="text" name="c_teacher"  readonly unselectable="on"  value="#(evaluationinfo.c_teacher)" />
+          		 <p>评价:</p> 
+            <input type="text" name="evaluation" value="#(evaluationinfo.evaluation)"/>
+			<input type="submit" value="保存" />
+		</div>
+	</form>
+</div>

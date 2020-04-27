@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.dao.CourseAccountDao">
+	<!-- 目的：为DAO接口方法提供sql语句配置 -->
+	
+	<!-- 展示课程信息 -->
+	<select id="showCourse" resultType="CourseInfo"
+		parameterType="String">
+		select * from t_course left join t_course_type on t_course.c_type = t_course_type.type_id  where 1=1
+	</select>
+	
+	<!-- 通过学号查询学生信息 -->
+	<select id="findCourseByid" resultType="CourseInfo"
+		parameterType="String">
+		select * from t_course where c_id = #{c_id}
+	</select>
+
+	<!-- 删除课程信息 -->
+	 <delete id="delCourse" parameterType="String">
+       DELETE from t_course where c_id =#{c_id}
+    </delete>
+    
+    <!-- 修改课程信息 -->
+    <update id="updateCourse" keyProperty="id" parameterType="map">
+		update t_course set
+		(c_id,c_name,c_book,c_teacher,c_type,t_time,c_classroom,c_classtime)
+		values
+		(#{c_id},#{c_name},#{c_book},#{c_teacher},#{c_type},#{t_time},#{c_classroom},#{c_classtime})
+	</update>
+	
+	<!-- 添加课程信息 -->
+	<insert id="addCourse" keyProperty="id" parameterType="map">
+		insert into t_course
+		(c_id,c_name,c_book,c_teacher,c_type,t_time,c_classroom,c_classtime)
+		values
+		(#{c_id},#{c_name},#{c_book},#{c_teacher},#{c_type},#{t_time},#{c_classroom},#{c_classtime}))
+	</insert>
+	
+	<!-- 条件查询课程信息 -->
+	<select id="queryCourse" resultType="com.edu.model.CourseInfo"
+		parameterType="map">
+		select * from t_course left join t_course_type on t_course.c_type = t_course_type.type_id  where 1=1
+		<if test="c_id != '' and c_id != null">
+            and c_id =#{c_id}
+        </if>
+        <!--如果name有值，则模糊匹配name-->
+        <if test="c_name != '' and c_name!= null">
+            and c_name like '%#{c_name}%'
+        </if>
+        <if test="c_type != '' and c_type != null">
+            and c_type =#{c_type}
+        </if>
+        <if test="c_teacher != '' and c_teacher != null">
+            and c_teacher =#{c_teacher}
+        </if>
+	</select>
+	
+	<!-- 检查课程号 （确保唯一）-->
+	<select id="checkCourse" resultType="Integer"
+		parameterType="String">
+		select count(*) from t_course where c_id = #{c_id}
+	</select>
+	
+    <!-- 查询课程类型 -->
+	<select id="showType" resultType="String"
+		parameterType="String">
+		select * from t_course_type where 1=1
+	</select>
+	
+	 <!-- 查询排课列表 -->
+	<select id="showSchedule" resultType="String"
+		parameterType="String">
+		select * from t_course where 1=1
+	</select>
+	
+	<!-- 添加排课信息 -->
+    <update id="saveSchedule" keyProperty="id" parameterType="String">
+		update t_course set c_classtime= #{c_classtime} ,c_classroom= #{c_classroom} where c_name= #{c_name}
+	</update>
+</mapper>

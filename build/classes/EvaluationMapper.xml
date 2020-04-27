@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.edu.dao.EvaluationDao">
+	<!-- 目的：为DAO接口方法提供sql语句配置 -->
+	
+	<!-- 查询学生可评价课程信息 -->
+	<select id="showEvaCourse" resultType="Evaluationinfo"
+		parameterType="String">
+		SELECT c_name,c_teacher,c_id  FROM t_course INNER JOIN t_select on t_course.c_id = t_select.s_cid WHERE t_select.s_sid = #{u_no}
+	</select>
+	
+    <!-- 查询学生评价信息 -->
+	<select id="viewEvaluation" resultType="Evaluationinfo"
+		parameterType="String">
+		SELECT * FROM t_course INNER JOIN t_select on t_course.c_id = t_select.s_cid WHERE t_course.c_teacher = #{u_name}
+	</select>
+	
+    <!-- 添加课程评价信息 -->
+   <update id="addEvaluation" keyProperty="id" parameterType="map">
+        update t_select set c_evaluation= #{evaluation} where s_sid= #{u_no}  and s_cid= #{c_id}
+	</update>
+	
+</mapper>

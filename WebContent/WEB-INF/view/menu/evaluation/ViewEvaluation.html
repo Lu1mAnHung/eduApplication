@@ -1,0 +1,39 @@
+<div id="evaluationinfo" align="center">
+<table align="center" id="evaluation_table" width="50%" cellpadding="0" cellspacing="0" border="1">
+<thead>
+<tr>
+<th>课程编号</th>
+<th>课程名称</th>
+<th>评价</th>
+</tr>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+</div>
+<div id="content" style="display:none"></div>
+<script type="text/javascript" src="/static/dialog/dialog.js" ></script>
+<script type="text/javascript" src="/static/dialog/dialog-plus.js" ></script>
+<script type="text/javascript">
+function viewevaluation(){
+	$.post("/menu/courseeva/viewevaluation",function(evaluationArray){
+		$("#evaluationinfo").find("tbody").html("");
+		$.each(evaluationArray, function() {
+			var tr = $("<tr />");
+			var td = $("<td>" + this.c_id + "</td>");
+			tr.append(td);
+			var td = $("<td>" + this.c_name + "</td>");
+			tr.append(td);
+			if(this.c_evaluation ==null)
+				this.c_evaluation ="";
+			var td = $("<td>" + this.c_evaluation + "</td>");
+			tr.append(td);
+			$("#evaluationinfo").find("tbody").append(tr);
+	});
+});
+}
+$(function(){
+	viewevaluation();
+	});
+</script>

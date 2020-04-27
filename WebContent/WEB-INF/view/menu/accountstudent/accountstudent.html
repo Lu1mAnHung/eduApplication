@@ -1,0 +1,189 @@
+<div id = student_table  align="center">
+<div>
+<div>
+			学号: <input type="text" id="q_u_no"/>
+			姓名: <input type="text" id="q_u_name"/>
+			手机: <input type="text" id="q_u_phone"/>
+			班级: <select id="q_u_class">
+			        <option value="0"></option>
+					<option value="1">J2EE方向</option>
+					<option value="2">C++方向</option>
+					<option value="3">软件测试</option>
+				</select>
+			<button onclick="queryStudent()">查询</button>
+			</div>
+			<br/>
+		</div>
+<a href="javascript://" onclick="addStudent()">新增信息</a>
+<table align="center" id="student_table" width="50%" cellpadding="0" cellspacing="0" border="1">
+<thead>
+<tr>
+<th>学号</th>
+<th>姓名</th>
+<th>手机</th>
+<th>邮箱</th>
+<th>出生日期</th>
+<th>所在班级</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+
+</table>
+</div>
+<div id="content" style="display:none"></div>
+<script type="text/javascript" src="/static/dialog/dialog.js" ></script>
+<script type="text/javascript" src="/static/dialog/dialog-plus.js" ></script>
+<script type="text/javascript">
+function showStudent(){
+	$.post("/menu/accountstudent/showStudent",function(studentArray){
+		$("#student_table").find("tbody").html("");
+		$.each(studentArray,function(){
+			var tr = $("<tr />");
+			var td = $("<td>"+this.u_no+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.u_name+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.u_phone+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.u_email+"</td>");
+			tr.append(td);
+			td = $("<td>"+this.u_birthday+"</td>");
+			tr.append(td);
+			if(this.class_name ==null)
+				this.class_name ="";
+			td = $("<td>"+this.class_name+"</td>");
+			tr.append(td);
+			//修改按钮
+			var opTd = $("<td></td>");
+			var editBtn = $("<a href='javascript://'>修改</a>");
+			opTd.append(editBtn);
+			tr.append(opTd);
+			var selectData = this;
+			editBtn.click(function(){
+				editStudent(selectData);
+			});
+			opTd.append("&nbsp;&nbsp;");
+			//删除按钮
+			var delBtn = $("<a href='javascript://'>删除</a>");
+			opTd.append(delBtn);
+			tr.append(opTd);
+			var selectData = this;
+			delBtn.click(function(){
+				delStudent(selectData);
+			});
+
+				
+			$("#student_table").find("tbody").append(tr);
+		});
+	});
+}
+$(function(){
+	showStudent();
+});
+
+function editStudent(selectData){
+	var u_no = selectData.u_no;
+	var url = "/menu/accountstudent/viewEditStudent";
+	$("#content").load(url,{u_no:u_no}, function(content){
+		var d = dialog({
+			title: '修改学生信息',
+			content: content,
+			onclose: function () {
+				showStudent();
+			}
+		});
+		d.showModal();
+	});
+	
+	
+}
+
+function delStudent(selectData){
+	var u_no = selectData.u_no;
+	var u_name= selectData.u_name;
+	var u_role= selectData.u_role_fk;
+
+	if(confirm("确认要删除学生 : "+u_no+"-"+u_name+" 吗?")){
+		$.post("/menu/accountstudent/delStudent", {u_no:u_no,u_role:u_role},function(ret){
+			if("success"==ret){
+				alert("记录已删除!");
+				showStudent();
+			}else{
+				alert(ret);
+			}
+		});
+	}
+}
+function addStudent(){
+	var url = "/menu/accountstudent/viewaddStudent";
+	$("#content").load(url, function(content){
+		var d = dialog({
+			title: '新增学生信息',
+			content: document.getElementById("content"),
+			onclose: function () {
+				showStudent();
+			}
+		});
+		d.showModal();
+	});
+}
+
+function queryStudent(){
+	var u_no = $("#q_u_no").val();
+	var u_name = $("#q_u_name").val();
+	var class_fk= $("#q_u_class").val();
+	var u_phone = $("#q_u_phone").val();
+	var param={
+			u_no:u_no,
+	        u_name:u_name,
+	        class_fk:class_fk,
+	        u_phone: u_phone	
+	};
+$.post("/menu/accountstudent/queryStudent",param,function(qstudentArray){
+	$("#student_table").find("tbody").html("");
+	$.each(qstudentArray,function(){
+		var tr = $("<tr />");
+		var td = $("<td>"+this.u_no+"</td>");
+		tr.append(td);
+		td = $("<td>"+this.u_name+"</td>");
+		tr.append(td);
+		td = $("<td>"+this.u_phone+"</td>");
+		tr.append(td);
+		td = $("<td>"+this.u_email+"</td>");
+		tr.append(td);
+		td = $("<td>"+this.u_birthday+"</td>");
+		tr.append(td);
+		if(this.class_name ==null)
+			this.class_name ="";
+		td = $("<td>"+this.class_name+"</td>");
+		tr.append(td);
+		//修改按钮
+		var opTd = $("<td></td>");
+		var editBtn = $("<a href='javascript://'>修改</a>");
+		opTd.append(editBtn);
+		tr.append(opTd);
+		var selectData = this;
+		editBtn.click(function(){
+			editStudent(selectData);
+		});
+		opTd.append("&nbsp;&nbsp;");
+		//删除按钮
+		var delBtn = $("<a href='javascript://'>删除</a>");
+		opTd.append(delBtn);
+		tr.append(opTd);
+		var selectData = this;
+		delBtn.click(function(){
+			delStudent(selectData);
+		});			
+		$("#student_table").find("tbody").append(tr);
+	});
+});
+}
+
+laydate.render({
+	elem : 'u_birthday' ,//指定元素
+	type :'date'
+});
+</script>

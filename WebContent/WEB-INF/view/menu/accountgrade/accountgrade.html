@@ -1,0 +1,125 @@
+<div id="gradeinfo" align="center">
+     <div align="center">
+            学号:<input type="text" id="q_u_no"/>
+               学生姓名: <input type="text" id="q_u_name"/>
+		课程名字: <input type="text" id="q_c_name"/>
+		成绩状态: <select id="q_g_staus">
+			        <option value="3"></option>
+					<option value="1">已通过</option>
+					<option value="2">未通过</option>
+					<option value="0">未提交</option>
+				</select>
+			<button onclick="querygrade()">查询</button>
+			</div>
+<table align="center" id="grade_table" width="50%" cellpadding="0" cellspacing="0" border="1">
+<thead>
+<tr>
+<th>学号</th>
+<th>姓名</th>
+<th>课程名称</th>
+<th>成绩</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody>
+
+</tbody>
+</table>
+</div>
+<div id="content" style="display:none"></div>
+<script type="text/javascript" src="/static/dialog/dialog.js" ></script>
+<script type="text/javascript" src="/static/dialog/dialog-plus.js" ></script>
+<script type="text/javascript">
+function showgrade(){
+	$.post("/menu/accountgrade/showGrade",function(gradeArray){
+		$("#gradeinfo").find("tbody").html("");
+		$.each(gradeArray, function() {
+			var tr = $("<tr />");
+			var td = $("<td>" + this.s_sid + "</td>");
+			tr.append(td);
+			var td = $("<td>" + this.u_name + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_name + "</td>");
+			tr.append(td);
+			if(this.g_grade ==null)
+				this.g_grade ="";
+			td = $("<td>" + this.g_grade + "</td>");
+			tr.append(td);
+			//修改按钮
+			var opTd = $("<td></td>");
+			var editBtn = $("<a href='javascript://'>修改</a>");
+			opTd.append(editBtn);
+			tr.append(opTd);
+			var selectData = this;
+			editBtn.click(function(){
+				editGrade(selectData);
+			});
+			$("#gradeinfo").find("tbody").append(tr);
+	});
+});
+}
+$(function(){
+		showgrade();
+		});
+function querygrade(){
+	var u_no  = $("#q_u_no").val();
+	var c_name = $("#q_c_name").val();
+	var g_staus= $("#q_g_staus").val();
+	var u_name = $("#q_u_name").val();
+	var param={
+			u_no:u_no,
+			c_name : c_name,
+			g_staus: g_staus,
+			u_name: u_name
+	};
+	$.post("/menu/accountgrade/querygrade",param,function(qgradeArray){
+		$("#gradeinfo").find("tbody").html("");
+		$.each(qgradeArray, function() {
+			var tr = $("<tr />");
+			var td = $("<td>" + this.s_sid + "</td>");
+			tr.append(td);
+			var td = $("<td>" + this.u_name + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_name + "</td>");
+			tr.append(td);
+			if(this.g_grade ==null)
+				this.g_grade ="";
+			td = $("<td>" + this.g_grade + "</td>");
+			tr.append(td);
+			//修改按钮
+			var opTd = $("<td></td>");
+			var editBtn = $("<a href='javascript://'>修改</a>");
+			opTd.append(editBtn);
+			tr.append(opTd);
+			var selectData = this;
+			editBtn.click(function(){
+				editGrade(selectData);
+			});
+			$("#gradeinfo").find("tbody").append(tr);
+	});
+});
+}
+function editGrade(selectData){
+	var g_grade = selectData.g_grade;
+	var u_no = selectData.s_sid;
+	var s_cid = selectData.s_cid;
+	var g_staus = selectData.g_staus;
+	var url = "/menu/accountgrade/viewEditGrade";
+	var param={
+			u_no:u_no,
+			s_cid : s_cid,
+			g_staus: g_staus,
+			g_grade: g_grade
+	}
+	$("#content").load(url,param, function(content){
+		var d = dialog({
+			title: '修改成绩',
+			content: content,
+			onclose: function () {
+				showgrade();
+			}
+		});
+		d.showModal();
+	});
+}
+</script>

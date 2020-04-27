@@ -1,0 +1,74 @@
+<div id="gradeinfo">
+     <div align="center">
+			课程名字: <input type="text" id="q_c_name"/>
+			成绩状态: <select id="q_g_staus">
+			        <option value="3"></option>
+					<option value="1">已通过</option>
+					<option value="2">未通过</option>
+					<option value="0">未提交</option>
+				</select>
+			<button onclick="querygrade()">查询</button>
+			</div>
+	<table align="center" id="grade_table" width="50%" cellpadding="1" cellspacing="1" border="1">
+			<thead>
+				<tr>
+				<th>课程编号</th>
+				<th>课程名字</th>
+				<th>课程成绩</th>
+				<th>成绩状态</th>
+				</tr>
+			</thead>
+			<tbody>
+				
+			</tbody>
+			</table>
+</div>
+<script>
+function showgrade(){
+	$.post("/menu/gradeinfo/showGrade",function(gradeArray){
+		$("#gradeinfo").find("tbody").html("");
+		$.each(gradeArray, function() {
+			var tr = $("<tr />");
+			var td = $("<td>" + this.s_cid + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.c_name + "</td>");
+			tr.append(td);
+			if(this.g_grade ==null)
+				this.g_grade ="";
+			td = $("<td>" + this.g_grade + "</td>");
+			tr.append(td);
+			td = $("<td>" + this.states_name + "</td>");
+			tr.append(td);
+			$("#gradeinfo").find("tbody").append(tr);
+	});
+});
+}
+$(function(){
+		showgrade();
+		});
+function querygrade(){
+		var c_name = $("#q_c_name").val();
+		var g_staus= $("#q_g_staus").val();
+		var param={
+				c_name : c_name,
+				g_staus: g_staus
+		}
+		$.post("/menu/gradeinfo/querygrade",param,function(qgradeArray){
+			$("#gradeinfo").find("tbody").html("");
+			$.each(qgradeArray, function() {
+				var tr = $("<tr />");
+				var td = $("<td>" + this.s_cid + "</td>");
+				tr.append(td);
+				td = $("<td>" + this.c_name + "</td>");
+				tr.append(td);
+				if(this.g_grade ==null)
+					this.g_grade ="";
+				td = $("<td>" + this.g_grade + "</td>");
+				tr.append(td);
+				td = $("<td>" + this.states_name + "</td>");
+				tr.append(td);
+				$("#gradeinfo").find("tbody").append(tr);
+		});
+	});
+}
+</script>

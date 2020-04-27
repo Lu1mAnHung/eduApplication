@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<menus>
+
+
+<menu icon="fa fa-user" name="账户管理" id="accountman">
+
+<submenu icon="fa fa-lock" name="修改密码" id="changepass"/>
+
+<submenu icon="fa fa-star" name="个人信息" id="personalinfo"/>
+
+</menu>
+<menu icon="fa  fa-gear" name="信息管理" id="accountinfo">
+
+<submenu icon="fa fa-mortar-board" name="师生管理" id="accountstudent"/>
+
+<submenu icon="fa fa-user-secret" name="权限管理" id="accountrole"/>
+
+</menu>
+
+</menus>
